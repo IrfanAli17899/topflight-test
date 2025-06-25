@@ -41,23 +41,23 @@ export function ProductCard({ product }: ProductCardProps) {
 
   return (
     <Link href={`/products/${product.id}`}>
-      <Card className="group hover:shadow-2xl transition-all duration-500 h-full flex flex-col border-0 bg-card/50 backdrop-blur-sm hover:bg-card/80 overflow-hidden">
+      <Card className="group hover:shadow-glow transition-all duration-500 h-full flex flex-col border-0 glass-card overflow-hidden hover:scale-[1.02]">
         <CardContent className="p-0">
           <div className="relative aspect-square overflow-hidden">
             <Image
               src={product.image}
               alt={product.name}
               fill
-              className="object-cover group-hover:scale-110 transition-transform duration-500"
+              className="object-cover group-hover:scale-110 transition-transform duration-700"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             {product.isBestSeller && (
-              <Badge className="absolute top-3 left-3 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 border-0 shadow-lg">
+              <Badge className="absolute top-3 left-3 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 border-0 shadow-glow rounded-xl">
                 ⭐ Best Seller
               </Badge>
             )}
             {product.stock <= 10 && product.stock > 0 && (
-              <Badge variant="destructive" className="absolute top-3 right-3 shadow-lg">
+              <Badge variant="destructive" className="absolute top-3 right-3 shadow-glow rounded-xl">
                 Low Stock
               </Badge>
             )}
@@ -82,7 +82,7 @@ export function ProductCard({ product }: ProductCardProps) {
               <span className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
                 ${product.price}
               </span>
-              <Badge variant="secondary" className="bg-muted/50">
+              <Badge variant="secondary" className="glass-card rounded-xl">
                 {product.category}
               </Badge>
             </div>
@@ -91,7 +91,7 @@ export function ProductCard({ product }: ProductCardProps) {
         
         <CardFooter className="p-6 pt-0">
           <Button 
-            className="w-full group-hover:bg-primary/90 transition-all duration-300 shadow-lg hover:shadow-xl" 
+            className="w-full group-hover:bg-primary/90 transition-all duration-300 shadow-soft hover:shadow-glow rounded-xl bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90" 
             onClick={handleAddToCart}
             disabled={isAdding || product.stock === 0}
           >
