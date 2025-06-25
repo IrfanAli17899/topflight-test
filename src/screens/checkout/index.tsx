@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { ArrowLeft, CreditCard, CheckCircle, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -12,8 +11,20 @@ import { OrderSummary } from "./components/order-summary";
 import { useCartStore } from "@/lib/cart-store";
 import Link from "next/link";
 
+interface CheckoutFormData {
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  shippingAddress: {
+    street: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    country: string;
+  };
+}
+
 export default function CheckoutPage() {
-  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderComplete, setOrderComplete] = useState(false);
   const [orderId, setOrderId] = useState<string>("");
@@ -21,7 +32,7 @@ export default function CheckoutPage() {
   const { cart, clearCart } = useCartStore();
   const { execute: createOrder } = useServerAction(createOrderAction);
 
-  const handleSubmitOrder = async (formData: any) => {
+  const handleSubmitOrder = async (formData: CheckoutFormData) => {
     if (!cart || cart.items.length === 0) return;
 
     setIsSubmitting(true);

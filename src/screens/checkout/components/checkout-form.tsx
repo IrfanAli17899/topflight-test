@@ -6,13 +6,28 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
+interface ShippingAddress {
+  street: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  country: string;
+}
+
+interface CheckoutFormData {
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  shippingAddress: ShippingAddress;
+}
+
 interface CheckoutFormProps {
-  onSubmit: (data: any) => void;
+  onSubmit: (data: CheckoutFormData) => void;
   isSubmitting: boolean;
 }
 
 export function CheckoutForm({ onSubmit, isSubmitting }: CheckoutFormProps) {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<CheckoutFormData>({
     customerName: "",
     customerEmail: "",
     customerPhone: "",

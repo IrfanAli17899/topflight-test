@@ -23,7 +23,7 @@ export function ProductDetailContent({ product }: ProductDetailContentProps) {
   const handleAddToCart = async () => {
     setIsAdding(true);
     
-    const [result, error] = await addToCart({
+    const [, error] = await addToCart({
       productId: product.id,
       name: product.name,
       price: product.price,

@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import { notFound } from "next/navigation";
 import ProductDetailPage from "@/screens/product-detail";
 import { Skeleton } from "@/components/ui/skeleton";
 

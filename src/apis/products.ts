@@ -2,7 +2,7 @@
 
 import { createServerAction } from "zsa";
 import { z } from "zod";
-import { products, categories, type Product } from "@/data/products";
+import { products, categories  } from "@/data/products";
 
 const searchProductsSchema = z.object({
   query: z.string().optional(),

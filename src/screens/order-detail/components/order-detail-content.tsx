@@ -8,9 +8,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { type Order } from "@/data/orders";
 import { useServerAction } from "zsa-react";
 import { updateOrderStatusAction } from "@/apis/orders";
+import { type Order } from "@/data/orders";
 
 interface OrderDetailContentProps {
   order: Order;
@@ -34,7 +34,7 @@ export function OrderDetailContent({ order: initialOrder }: OrderDetailContentPr
     
     const [updatedOrder, error] = await updateOrderStatus({
       id: order.id,
-      status: newStatus as any,
+      status: newStatus as Order['status'],
     });
 
     if (error) {
