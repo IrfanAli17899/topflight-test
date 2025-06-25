@@ -23,21 +23,31 @@ const statusColors = {
 export function OrdersTable({ orders, currentPage, totalPages }: OrdersTableProps) {
   if (orders.length === 0) {
     return (
-      <Card className="border-0 shadow-lg bg-card/50 backdrop-blur-sm">
-        <CardContent className="text-center py-16">
-          <div className="text-6xl mb-4">📋</div>
-          <h3 className="text-xl font-semibold mb-2">No orders found</h3>
-          <p className="text-muted-foreground">
-            Try adjusting your filters to find what you're looking for.
-          </p>
-        </CardContent>
-      </Card>
+      <div className="space-y-6">
+        <Card className="border-0 shadow-glow glass-card">
+          <CardContent className="text-center py-16">
+            <div className="text-6xl mb-4">📋</div>
+            <h3 className="text-xl font-semibold mb-2">No orders found</h3>
+            <p className="text-muted-foreground">
+              Try adjusting your filters to find what you're looking for.
+            </p>
+          </CardContent>
+        </Card>
+        
+        {/* Show pagination even when no results if there are multiple pages */}
+        {totalPages > 1 && (
+          <OrderPagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+          />
+        )}
+      </div>
     );
   }
 
   return (
     <div className="space-y-6">
-      <Card className="border-0 shadow-lg bg-card/50 backdrop-blur-sm">
+      <Card className="border-0 shadow-glow glass-card">
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             <table className="w-full">
@@ -84,7 +94,7 @@ export function OrdersTable({ orders, currentPage, totalPages }: OrdersTableProp
                     <td className="p-4">
                       <Badge 
                         variant="outline" 
-                        className={statusColors[order.status]}
+                        className={`${statusColors[order.status]} rounded-xl`}
                       >
                         {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                       </Badge>
@@ -98,7 +108,7 @@ export function OrdersTable({ orders, currentPage, totalPages }: OrdersTableProp
                       </div>
                     </td>
                     <td className="p-4">
-                      <Button asChild variant="ghost" size="sm">
+                      <Button asChild variant="ghost" size="sm" className="rounded-xl">
                         <Link href={`/provider/orders/${order.id}`}>
                           <Eye className="h-4 w-4" />
                         </Link>
@@ -112,6 +122,7 @@ export function OrdersTable({ orders, currentPage, totalPages }: OrdersTableProp
         </CardContent>
       </Card>
       
+      {/* Always show pagination if there are multiple pages, regardless of current results */}
       {totalPages > 1 && (
         <OrderPagination
           currentPage={currentPage}

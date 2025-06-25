@@ -20,7 +20,7 @@ export async function HeroCarousel() {
   }
 
   return (
-    <div className="relative mt-16">
+    <div className="relative mt-16 w-full">
       <div className="text-center mb-8">
         <div className="inline-flex items-center px-4 py-2 rounded-full glass-card shadow-soft text-sm font-medium text-muted-foreground mb-4">
           🔥 Featured Products
@@ -30,23 +30,27 @@ export async function HeroCarousel() {
         </h2>
       </div>
       
-      <Carousel
-        opts={{
-          align: "start",
-          loop: true,
-        }}
-        className="w-full max-w-6xl mx-auto"
-      >
-        <CarouselContent className="-ml-2 md:-ml-4">
-          {bestSellers.map((product) => (
-            <CarouselItem key={product.id} className="pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3">
-              <ProductCard product={product} />
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        <CarouselPrevious className="glass-card shadow-glow hover:shadow-glow border-0 -left-4 lg:-left-12" />
-        <CarouselNext className="glass-card shadow-glow hover:shadow-glow border-0 -right-4 lg:-right-12" />
-      </Carousel>
+      <div className="w-full max-w-none">
+        <Carousel
+          opts={{
+            align: "center",
+            loop: true,
+          }}
+          className="w-full"
+        >
+          <CarouselContent className="ml-0">
+            {bestSellers.map((product) => (
+              <CarouselItem key={product.id} className="pl-0 basis-full flex justify-center">
+                <div className="w-full max-w-sm mx-auto">
+                  <ProductCard product={product} />
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="glass-card shadow-glow hover:shadow-glow border-0 left-4 lg:left-8" />
+          <CarouselNext className="glass-card shadow-glow hover:shadow-glow border-0 right-4 lg:right-8" />
+        </Carousel>
+      </div>
     </div>
   );
 }
