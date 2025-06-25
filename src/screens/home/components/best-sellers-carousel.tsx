@@ -20,13 +20,13 @@ export async function BestSellersCarousel() {
   }
 
   return (
-    <div className="relative">
+    <div className="relative max-w-7xl mx-auto">
       <Carousel
         opts={{
           align: "start",
           loop: true,
         }}
-        className="w-full max-w-7xl mx-auto"
+        className="w-full"
       >
         <CarouselContent className="-ml-2 md:-ml-4">
           {bestSellers.map((product) => (

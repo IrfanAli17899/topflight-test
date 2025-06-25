@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, CreditCard, CheckCircle } from "lucide-react";
+import { ArrowLeft, CreditCard, CheckCircle, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useServerAction } from "zsa-react";
@@ -73,27 +73,47 @@ export default function CheckoutPage() {
 
   if (orderComplete) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-muted/10 to-background">
+      <div className="min-h-screen bg-gradient-to-br from-background via-muted/10 to-background flex items-center justify-center">
         <div className="container mx-auto px-4 py-16">
-          <Card className="max-w-2xl mx-auto text-center border-0 shadow-glow glass-card">
+          <Card className="max-w-3xl mx-auto text-center border-0 shadow-glow glass-card overflow-hidden">
             <CardContent className="p-12">
-              <div className="text-green-500 mb-6">
-                <CheckCircle className="h-16 w-16 mx-auto" />
+              {/* Success Animation */}
+              <div className="relative mb-8">
+                <div className="w-24 h-24 mx-auto bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center shadow-glow">
+                  <CheckCircle className="h-12 w-12 text-white" />
+                </div>
+                <div className="absolute inset-0 w-24 h-24 mx-auto bg-gradient-to-r from-green-500 to-emerald-500 rounded-full animate-ping opacity-20"></div>
               </div>
-              <h1 className="text-3xl font-bold mb-4">Order Confirmed!</h1>
-              <p className="text-muted-foreground mb-2">
-                Thank you for your order. Your order ID is:
-              </p>
-              <p className="text-2xl font-bold text-primary mb-8">{orderId}</p>
-              <p className="text-muted-foreground mb-8">
-                You will receive an email confirmation shortly with your order details and tracking information.
-              </p>
-              <div className="space-y-4">
-                <Button asChild size="lg" className="w-full sm:w-auto rounded-xl">
+
+              <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+                Order Confirmed!
+              </h1>
+              
+              <div className="glass-card p-6 rounded-2xl mb-8 max-w-md mx-auto">
+                <p className="text-muted-foreground mb-2">Your order ID is:</p>
+                <p className="text-3xl font-bold text-primary font-mono">{orderId}</p>
+              </div>
+
+              <div className="space-y-4 mb-8">
+                <div className="flex items-center justify-center gap-3 text-muted-foreground">
+                  <Package className="h-5 w-5" />
+                  <span>Order has been added to the provider portal</span>
+                </div>
+                <p className="text-muted-foreground max-w-2xl mx-auto">
+                  You will receive an email confirmation shortly with your order details and tracking information. 
+                  Your order is now being processed and will be shipped soon.
+                </p>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button asChild size="lg" className="rounded-xl shadow-glow bg-gradient-to-r from-primary to-blue-600">
                   <Link href="/products">Continue Shopping</Link>
                 </Button>
-                <Button asChild variant="outline" size="lg" className="w-full sm:w-auto rounded-xl">
+                <Button asChild variant="outline" size="lg" className="rounded-xl glass-card">
                   <Link href="/">Back to Home</Link>
+                </Button>
+                <Button asChild variant="outline" size="lg" className="rounded-xl glass-card">
+                  <Link href="/provider">View in Provider Portal</Link>
                 </Button>
               </div>
             </CardContent>
