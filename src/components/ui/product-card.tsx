@@ -2,14 +2,14 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Star, ShoppingCart } from "lucide-react";
+import { Star, ShoppingCart, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { type Product } from "@/data/products";
 import { useServerAction } from "zsa-react";
-import { addToCartAction } from "@/apis/cart";
-import { useState } from "react";
+import { addToCartAction, getCartAction } from "@/apis/cart";
+import { useState, useEffect } from "react";
 
 interface ProductCardProps {
   product: Product;
@@ -17,11 +17,25 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const [isAdding, setIsAdding] = useState(false);
+  const [isInCart, setIsInCart] = useState(false);
   const { execute: addToCart } = useServerAction(addToCartAction);
+  const { data: cart, execute: getCart } = useServerAction(getCartAction);
+
+  useEffect(() => {
+    getCart({});
+  }, [getCart]);
+
+  useEffect(() => {
+    if (cart) {
+      setIsInCart(cart.items.some(item => item.productId === product.id));
+    }
+  }, [cart, product.id]);
 
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    
+    if (isInCart) return; // Don't add if already in cart
     
     setIsAdding(true);
     
@@ -34,6 +48,10 @@ export function ProductCard({ product }: ProductCardProps) {
 
     if (error) {
       console.error("Failed to add to cart:", error);
+    } else {
+      setIsInCart(true);
+      // Refresh cart data
+      getCart({});
     }
     
     setIsAdding(false);
@@ -91,12 +109,25 @@ export function ProductCard({ product }: ProductCardProps) {
         
         <CardFooter className="p-6 pt-0">
           <Button 
-            className="w-full group-hover:bg-primary/90 transition-all duration-300 shadow-soft hover:shadow-glow rounded-xl bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90" 
+            className={`w-full transition-all duration-300 shadow-soft hover:shadow-glow rounded-xl ${
+              isInCart 
+                ? "bg-green-600 hover:bg-green-700 text-white" 
+                : "bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90"
+            }`}
             onClick={handleAddToCart}
-            disabled={isAdding || product.stock === 0}
+            disabled={isAdding || product.stock === 0 || isInCart}
           >
-            <ShoppingCart className="h-4 w-4 mr-2" />
-            {isAdding ? "Adding..." : product.stock === 0 ? "Out of Stock" : "Add to Cart"}
+            {isInCart ? (
+              <>
+                <Check className="h-4 w-4 mr-2" />
+                Added to Cart
+              </>
+            ) : (
+              <>
+                <ShoppingCart className="h-4 w-4 mr-2" />
+                {isAdding ? "Adding..." : product.stock === 0 ? "Out of Stock" : "Add to Cart"}
+              </>
+            )}
           </Button>
         </CardFooter>
       </Card>

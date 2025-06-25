@@ -8,14 +8,17 @@ import { faqs } from "@/data/products";
 
 export function FAQSection() {
   return (
-    <section className="relative overflow-hidden">
+    <section className="relative overflow-hidden py-24">
       {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-muted/30 via-background to-muted/20" />
+      <div className="absolute inset-0 bg-gradient-to-br from-muted/20 via-background to-primary/5" />
       
-      <div className="relative container mx-auto px-4 py-24">
+      <div className="relative container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            <div className="inline-flex items-center px-4 py-2 rounded-full glass-card shadow-soft text-sm font-medium text-muted-foreground mb-6">
+              ❓ Got Questions?
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
               Frequently Asked Questions
             </h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
@@ -28,7 +31,7 @@ export function FAQSection() {
               <AccordionItem 
                 key={index} 
                 value={`item-${index}`} 
-                className="border-0 bg-card/50 backdrop-blur-sm rounded-xl px-6 shadow-lg hover:shadow-xl transition-all duration-300"
+                className="border-0 glass-card rounded-2xl px-6 shadow-soft hover:shadow-glow transition-all duration-300"
               >
                 <AccordionTrigger className="text-left hover:no-underline py-6 text-lg font-semibold">
                   {faq.question}

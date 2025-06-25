@@ -2,12 +2,12 @@ import Link from "next/link";
 
 export function Footer() {
   return (
-    <footer className="border-t bg-gradient-to-br from-muted/30 via-background to-muted/20">
+    <footer className="border-t border-border/50 glass-card-strong">
       <div className="container mx-auto px-4 py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
-              <div className="h-6 w-6 rounded-full bg-gradient-to-r from-primary to-blue-600"></div>
+              <div className="h-6 w-6 rounded-xl bg-gradient-to-r from-primary to-blue-600 shadow-glow"></div>
               <span className="text-lg font-bold">SupplementStore</span>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
@@ -15,13 +15,13 @@ export function Footer() {
               Fuel your fitness journey with scientifically-backed formulations.
             </p>
             <div className="flex space-x-4 pt-4">
-              <div className="w-8 h-8 rounded-full bg-muted/50 flex items-center justify-center hover:bg-primary/20 transition-colors cursor-pointer">
+              <div className="w-8 h-8 rounded-xl glass-card flex items-center justify-center hover:bg-primary/20 transition-colors cursor-pointer shadow-soft">
                 <span className="text-xs">📧</span>
               </div>
-              <div className="w-8 h-8 rounded-full bg-muted/50 flex items-center justify-center hover:bg-primary/20 transition-colors cursor-pointer">
+              <div className="w-8 h-8 rounded-xl glass-card flex items-center justify-center hover:bg-primary/20 transition-colors cursor-pointer shadow-soft">
                 <span className="text-xs">📱</span>
               </div>
-              <div className="w-8 h-8 rounded-full bg-muted/50 flex items-center justify-center hover:bg-primary/20 transition-colors cursor-pointer">
+              <div className="w-8 h-8 rounded-xl glass-card flex items-center justify-center hover:bg-primary/20 transition-colors cursor-pointer shadow-soft">
                 <span className="text-xs">🐦</span>
               </div>
             </div>
@@ -61,12 +61,12 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="border-t mt-12 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-muted-foreground">
+        <div className="border-t border-border/50 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-muted-foreground">
           <p>&copy; 2024 SupplementStore. All rights reserved.</p>
           <div className="flex items-center space-x-4 mt-4 md:mt-0">
-            <span>🔒 Secure Payments</span>
-            <span>🚚 Fast Shipping</span>
-            <span>✅ Quality Guaranteed</span>
+            <span className="flex items-center gap-1">🔒 Secure Payments</span>
+            <span className="flex items-center gap-1">🚚 Fast Shipping</span>
+            <span className="flex items-center gap-1">✅ Quality Guaranteed</span>
           </div>
         </div>
       </div>
