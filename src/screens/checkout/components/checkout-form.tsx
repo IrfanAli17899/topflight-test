@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Loader2 } from "lucide-react";
 
 interface CheckoutFormProps {
   onSubmit: (data: any) => void;
@@ -101,7 +102,7 @@ export function CheckoutForm({ onSubmit, isSubmitting }: CheckoutFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Customer Information */}
-      <Card className="border-0 shadow-lg bg-card/50 backdrop-blur-sm">
+      <Card className="border-0 shadow-glow glass-card">
         <CardHeader>
           <CardTitle>Customer Information</CardTitle>
         </CardHeader>
@@ -112,7 +113,8 @@ export function CheckoutForm({ onSubmit, isSubmitting }: CheckoutFormProps) {
               id="customerName"
               value={formData.customerName}
               onChange={(e) => handleInputChange("customerName", e.target.value)}
-              className={errors.customerName ? "border-destructive" : ""}
+              className={`rounded-xl ${errors.customerName ? "border-destructive" : ""}`}
+              disabled={isSubmitting}
             />
             {errors.customerName && (
               <p className="text-sm text-destructive mt-1">{errors.customerName}</p>
@@ -126,7 +128,8 @@ export function CheckoutForm({ onSubmit, isSubmitting }: CheckoutFormProps) {
               type="email"
               value={formData.customerEmail}
               onChange={(e) => handleInputChange("customerEmail", e.target.value)}
-              className={errors.customerEmail ? "border-destructive" : ""}
+              className={`rounded-xl ${errors.customerEmail ? "border-destructive" : ""}`}
+              disabled={isSubmitting}
             />
             {errors.customerEmail && (
               <p className="text-sm text-destructive mt-1">{errors.customerEmail}</p>
@@ -140,7 +143,8 @@ export function CheckoutForm({ onSubmit, isSubmitting }: CheckoutFormProps) {
               type="tel"
               value={formData.customerPhone}
               onChange={(e) => handleInputChange("customerPhone", e.target.value)}
-              className={errors.customerPhone ? "border-destructive" : ""}
+              className={`rounded-xl ${errors.customerPhone ? "border-destructive" : ""}`}
+              disabled={isSubmitting}
             />
             {errors.customerPhone && (
               <p className="text-sm text-destructive mt-1">{errors.customerPhone}</p>
@@ -150,7 +154,7 @@ export function CheckoutForm({ onSubmit, isSubmitting }: CheckoutFormProps) {
       </Card>
 
       {/* Shipping Address */}
-      <Card className="border-0 shadow-lg bg-card/50 backdrop-blur-sm">
+      <Card className="border-0 shadow-glow glass-card">
         <CardHeader>
           <CardTitle>Shipping Address</CardTitle>
         </CardHeader>
@@ -161,7 +165,8 @@ export function CheckoutForm({ onSubmit, isSubmitting }: CheckoutFormProps) {
               id="street"
               value={formData.shippingAddress.street}
               onChange={(e) => handleInputChange("shippingAddress.street", e.target.value)}
-              className={errors["shippingAddress.street"] ? "border-destructive" : ""}
+              className={`rounded-xl ${errors["shippingAddress.street"] ? "border-destructive" : ""}`}
+              disabled={isSubmitting}
             />
             {errors["shippingAddress.street"] && (
               <p className="text-sm text-destructive mt-1">{errors["shippingAddress.street"]}</p>
@@ -175,7 +180,8 @@ export function CheckoutForm({ onSubmit, isSubmitting }: CheckoutFormProps) {
                 id="city"
                 value={formData.shippingAddress.city}
                 onChange={(e) => handleInputChange("shippingAddress.city", e.target.value)}
-                className={errors["shippingAddress.city"] ? "border-destructive" : ""}
+                className={`rounded-xl ${errors["shippingAddress.city"] ? "border-destructive" : ""}`}
+                disabled={isSubmitting}
               />
               {errors["shippingAddress.city"] && (
                 <p className="text-sm text-destructive mt-1">{errors["shippingAddress.city"]}</p>
@@ -188,7 +194,8 @@ export function CheckoutForm({ onSubmit, isSubmitting }: CheckoutFormProps) {
                 id="state"
                 value={formData.shippingAddress.state}
                 onChange={(e) => handleInputChange("shippingAddress.state", e.target.value)}
-                className={errors["shippingAddress.state"] ? "border-destructive" : ""}
+                className={`rounded-xl ${errors["shippingAddress.state"] ? "border-destructive" : ""}`}
+                disabled={isSubmitting}
               />
               {errors["shippingAddress.state"] && (
                 <p className="text-sm text-destructive mt-1">{errors["shippingAddress.state"]}</p>
@@ -203,7 +210,8 @@ export function CheckoutForm({ onSubmit, isSubmitting }: CheckoutFormProps) {
                 id="zipCode"
                 value={formData.shippingAddress.zipCode}
                 onChange={(e) => handleInputChange("shippingAddress.zipCode", e.target.value)}
-                className={errors["shippingAddress.zipCode"] ? "border-destructive" : ""}
+                className={`rounded-xl ${errors["shippingAddress.zipCode"] ? "border-destructive" : ""}`}
+                disabled={isSubmitting}
               />
               {errors["shippingAddress.zipCode"] && (
                 <p className="text-sm text-destructive mt-1">{errors["shippingAddress.zipCode"]}</p>
@@ -217,6 +225,7 @@ export function CheckoutForm({ onSubmit, isSubmitting }: CheckoutFormProps) {
                 value={formData.shippingAddress.country}
                 onChange={(e) => handleInputChange("shippingAddress.country", e.target.value)}
                 disabled
+                className="rounded-xl"
               />
             </div>
           </div>
@@ -226,10 +235,17 @@ export function CheckoutForm({ onSubmit, isSubmitting }: CheckoutFormProps) {
       <Button
         type="submit"
         size="lg"
-        className="w-full"
+        className="w-full rounded-xl shadow-glow bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90"
         disabled={isSubmitting}
       >
-        {isSubmitting ? "Processing Order..." : "Place Order"}
+        {isSubmitting ? (
+          <>
+            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+            Processing Order...
+          </>
+        ) : (
+          "Place Order"
+        )}
       </Button>
     </form>
   );

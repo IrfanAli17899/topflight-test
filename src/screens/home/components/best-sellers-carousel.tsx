@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getBestSellersAction } from "@/apis/products";
 import {
   Carousel,
@@ -7,9 +8,11 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { ProductCard } from "@/components/ui/product-card";
+import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
 
 export async function BestSellersCarousel() {
-  const [bestSellers, error] = await getBestSellersAction({ limit: 8 });
+  const [bestSellers, error] = await getBestSellersAction({ limit: 12 });
 
   if (error) {
     return (
@@ -38,6 +41,16 @@ export async function BestSellersCarousel() {
         <CarouselPrevious className="glass-card shadow-glow hover:shadow-glow border-0 -left-4 lg:-left-12" />
         <CarouselNext className="glass-card shadow-glow hover:shadow-glow border-0 -right-4 lg:-right-12" />
       </Carousel>
+      
+      {/* View All Button */}
+      <div className="text-center mt-12">
+        <Button asChild size="lg" variant="outline" className="rounded-xl glass-card shadow-soft hover:shadow-glow">
+          <Link href="/products?bestSellers=true">
+            View All Best Sellers
+            <ArrowRight className="h-4 w-4 ml-2" />
+          </Link>
+        </Button>
+      </div>
     </div>
   );
 }
