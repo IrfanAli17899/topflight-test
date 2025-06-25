@@ -41,47 +41,57 @@ export function ProductCard({ product }: ProductCardProps) {
 
   return (
     <Link href={`/products/${product.id}`}>
-      <Card className="group hover:shadow-lg transition-all duration-300 h-full flex flex-col">
+      <Card className="group hover:shadow-2xl transition-all duration-500 h-full flex flex-col border-0 bg-card/50 backdrop-blur-sm hover:bg-card/80 overflow-hidden">
         <CardContent className="p-0">
-          <div className="relative aspect-square overflow-hidden rounded-t-xl">
+          <div className="relative aspect-square overflow-hidden">
             <Image
               src={product.image}
               alt={product.name}
               fill
-              className="object-cover group-hover:scale-105 transition-transform duration-300"
+              className="object-cover group-hover:scale-110 transition-transform duration-500"
             />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             {product.isBestSeller && (
-              <Badge className="absolute top-2 left-2 bg-orange-500 hover:bg-orange-600">
-                Best Seller
+              <Badge className="absolute top-3 left-3 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 border-0 shadow-lg">
+                ⭐ Best Seller
+              </Badge>
+            )}
+            {product.stock <= 10 && product.stock > 0 && (
+              <Badge variant="destructive" className="absolute top-3 right-3 shadow-lg">
+                Low Stock
               </Badge>
             )}
           </div>
           
-          <div className="p-4 space-y-2 flex-1">
+          <div className="p-6 space-y-3 flex-1">
             <div className="flex items-center gap-1 text-sm text-muted-foreground">
               <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-              <span>{product.rating}</span>
+              <span className="font-medium">{product.rating}</span>
               <span>({product.reviews} reviews)</span>
             </div>
             
-            <h3 className="font-semibold text-lg line-clamp-2 group-hover:text-primary transition-colors">
+            <h3 className="font-bold text-lg line-clamp-2 group-hover:text-primary transition-colors duration-300">
               {product.name}
             </h3>
             
-            <p className="text-sm text-muted-foreground line-clamp-2">
+            <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
               {product.description}
             </p>
             
             <div className="flex items-center justify-between pt-2">
-              <span className="text-2xl font-bold">${product.price}</span>
-              <Badge variant="secondary">{product.category}</Badge>
+              <span className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+                ${product.price}
+              </span>
+              <Badge variant="secondary" className="bg-muted/50">
+                {product.category}
+              </Badge>
             </div>
           </div>
         </CardContent>
         
-        <CardFooter className="p-4 pt-0">
+        <CardFooter className="p-6 pt-0">
           <Button 
-            className="w-full" 
+            className="w-full group-hover:bg-primary/90 transition-all duration-300 shadow-lg hover:shadow-xl" 
             onClick={handleAddToCart}
             disabled={isAdding || product.stock === 0}
           >
