@@ -6,39 +6,33 @@ import Link from "next/link";
 import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { type CartItem as CartItemType } from "@/lib/cart";
-import { useServerAction } from "zsa-react";
-import { removeFromCartAction } from "@/apis/cart";
+import { type CartItem as CartItemType } from "@/lib/cart-store";
+import { useCartStore } from "@/lib/cart-store";
 
 interface CartItemProps {
   item: CartItemType;
-  onUpdate: () => void;
 }
 
-export function CartItem({ item, onUpdate }: CartItemProps) {
+export function CartItem({ item }: CartItemProps) {
   const [isRemoving, setIsRemoving] = useState(false);
-  const { execute: removeFromCart } = useServerAction(removeFromCartAction);
+  const removeFromCart = useCartStore((state) => state.removeFromCart);
 
   const handleRemove = async () => {
     setIsRemoving(true);
     
-    const [result, error] = await removeFromCart({ productId: item.productId });
-    
-    if (error) {
-      console.error("Failed to remove from cart:", error);
-    } else {
-      onUpdate();
-    }
-    
-    setIsRemoving(false);
+    // Add a small delay for better UX
+    setTimeout(() => {
+      removeFromCart(item.productId);
+      setIsRemoving(false);
+    }, 300);
   };
 
   return (
-    <Card className="border-0 bg-muted/30">
+    <Card className="border-0 glass-card shadow-soft hover:shadow-glow transition-all duration-300">
       <CardContent className="p-4">
         <div className="flex gap-4">
           <Link href={`/products/${item.productId}`} className="flex-shrink-0">
-            <div className="relative w-20 h-20 rounded-lg overflow-hidden">
+            <div className="relative w-20 h-20 rounded-xl overflow-hidden">
               <Image
                 src={item.image}
                 alt={item.name}
@@ -67,7 +61,7 @@ export function CartItem({ item, onUpdate }: CartItemProps) {
               size="sm"
               onClick={handleRemove}
               disabled={isRemoving}
-              className="text-destructive hover:text-destructive hover:bg-destructive/10"
+              className="text-destructive hover:text-destructive hover:bg-destructive/10 rounded-xl"
             >
               <Trash2 className="h-4 w-4" />
             </Button>

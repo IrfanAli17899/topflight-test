@@ -1,15 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, CreditCard, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { useServerAction } from "zsa-react";
-import { getCartAction, clearCartAction } from "@/apis/cart";
 import { createOrderAction } from "@/apis/orders";
 import { CheckoutForm } from "./components/checkout-form";
 import { OrderSummary } from "./components/order-summary";
+import { useCartStore } from "@/lib/cart-store";
 import Link from "next/link";
 
 export default function CheckoutPage() {
@@ -18,13 +18,8 @@ export default function CheckoutPage() {
   const [orderComplete, setOrderComplete] = useState(false);
   const [orderId, setOrderId] = useState<string>("");
   
-  const { data: cart, execute: getCart, isPending } = useServerAction(getCartAction);
-  const { execute: clearCart } = useServerAction(clearCartAction);
+  const { cart, clearCart } = useCartStore();
   const { execute: createOrder } = useServerAction(createOrderAction);
-
-  useEffect(() => {
-    getCart({});
-  }, [getCart]);
 
   const handleSubmitOrder = async (formData: any) => {
     if (!cart || cart.items.length === 0) return;
@@ -51,31 +46,23 @@ export default function CheckoutPage() {
     }
 
     // Clear the cart
-    await clearCart({});
+    clearCart();
     
     setOrderId(order.id);
     setOrderComplete(true);
     setIsSubmitting(false);
   };
 
-  if (isPending) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center">Loading checkout...</div>
-      </div>
-    );
-  }
-
   if (!cart || cart.items.length === 0) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <Card className="text-center py-16">
+        <Card className="text-center py-16 border-0 shadow-glow glass-card">
           <CardContent>
             <h2 className="text-2xl font-semibold mb-4">Your cart is empty</h2>
             <p className="text-muted-foreground mb-6">
               Add some products to your cart before checking out.
             </p>
-            <Button asChild>
+            <Button asChild className="rounded-xl">
               <Link href="/products">Continue Shopping</Link>
             </Button>
           </CardContent>
@@ -88,7 +75,7 @@ export default function CheckoutPage() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-muted/10 to-background">
         <div className="container mx-auto px-4 py-16">
-          <Card className="max-w-2xl mx-auto text-center border-0 shadow-2xl bg-card/50 backdrop-blur-sm">
+          <Card className="max-w-2xl mx-auto text-center border-0 shadow-glow glass-card">
             <CardContent className="p-12">
               <div className="text-green-500 mb-6">
                 <CheckCircle className="h-16 w-16 mx-auto" />
@@ -102,10 +89,10 @@ export default function CheckoutPage() {
                 You will receive an email confirmation shortly with your order details and tracking information.
               </p>
               <div className="space-y-4">
-                <Button asChild size="lg" className="w-full sm:w-auto">
+                <Button asChild size="lg" className="w-full sm:w-auto rounded-xl">
                   <Link href="/products">Continue Shopping</Link>
                 </Button>
-                <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
+                <Button asChild variant="outline" size="lg" className="w-full sm:w-auto rounded-xl">
                   <Link href="/">Back to Home</Link>
                 </Button>
               </div>
@@ -121,7 +108,7 @@ export default function CheckoutPage() {
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
-          <Button variant="ghost" asChild className="mb-4">
+          <Button variant="ghost" asChild className="mb-4 rounded-xl">
             <Link href="/cart">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Cart

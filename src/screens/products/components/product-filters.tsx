@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Search, Filter, X } from "lucide-react";
+import { Search, Filter, X, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -23,6 +23,7 @@ interface ProductFiltersProps {
 export function ProductFilters({ categories, searchParams }: ProductFiltersProps) {
   const router = useRouter();
   const urlSearchParams = useSearchParams();
+  const [isPending, startTransition] = useTransition();
   
   const [query, setQuery] = useState(searchParams.query || "");
   const [selectedCategory, setSelectedCategory] = useState(searchParams.category || "all");
@@ -31,20 +32,22 @@ export function ProductFilters({ categories, searchParams }: ProductFiltersProps
   const [bestSellers, setBestSellers] = useState(searchParams.bestSellers === 'true');
 
   const updateFilters = (updates: Record<string, string | undefined>) => {
-    const params = new URLSearchParams(urlSearchParams.toString());
-    
-    Object.entries(updates).forEach(([key, value]) => {
-      if (value && value !== "all") {
-        params.set(key, value);
-      } else {
-        params.delete(key);
-      }
+    startTransition(() => {
+      const params = new URLSearchParams(urlSearchParams.toString());
+      
+      Object.entries(updates).forEach(([key, value]) => {
+        if (value && value !== "all") {
+          params.set(key, value);
+        } else {
+          params.delete(key);
+        }
+      });
+      
+      // Reset to first page when filters change
+      params.delete('page');
+      
+      router.push(`/products?${params.toString()}`);
     });
-    
-    // Reset to first page when filters change
-    params.delete('page');
-    
-    router.push(`/products?${params.toString()}`);
   };
 
   const handleSearch = (e: React.FormEvent) => {
@@ -76,25 +79,29 @@ export function ProductFilters({ categories, searchParams }: ProductFiltersProps
     setMinPrice("");
     setMaxPrice("");
     setBestSellers(false);
-    router.push("/products");
+    startTransition(() => {
+      router.push("/products");
+    });
   };
 
   const hasActiveFilters = query || selectedCategory !== "all" || minPrice || maxPrice || bestSellers;
 
   return (
-    <Card className="border-0 shadow-lg bg-card/50 backdrop-blur-sm">
+    <Card className="border-0 shadow-glow glass-card">
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2">
             <Filter className="h-5 w-5" />
             Filters
+            {isPending && <Loader2 className="h-4 w-4 animate-spin" />}
           </CardTitle>
           {hasActiveFilters && (
             <Button
               variant="ghost"
               size="sm"
               onClick={clearAllFilters}
-              className="text-muted-foreground hover:text-foreground"
+              disabled={isPending}
+              className="text-muted-foreground hover:text-foreground rounded-xl"
             >
               <X className="h-4 w-4 mr-1" />
               Clear
@@ -112,10 +119,11 @@ export function ProductFilters({ categories, searchParams }: ProductFiltersProps
               placeholder="Search by name or description..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="flex-1"
+              className="flex-1 rounded-xl"
+              disabled={isPending}
             />
-            <Button type="submit" size="icon" variant="outline">
-              <Search className="h-4 w-4" />
+            <Button type="submit" size="icon" variant="outline" disabled={isPending} className="rounded-xl">
+              {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
             </Button>
           </form>
         </div>
@@ -127,7 +135,8 @@ export function ProductFilters({ categories, searchParams }: ProductFiltersProps
           <Button
             variant={bestSellers ? "default" : "outline"}
             onClick={handleBestSellersToggle}
-            className="w-full justify-start"
+            disabled={isPending}
+            className="w-full justify-start rounded-xl"
           >
             ⭐ Best Sellers Only
           </Button>
@@ -142,7 +151,8 @@ export function ProductFilters({ categories, searchParams }: ProductFiltersProps
             <Button
               variant={selectedCategory === "all" ? "default" : "ghost"}
               onClick={() => handleCategoryChange("all")}
-              className="w-full justify-start"
+              disabled={isPending}
+              className="w-full justify-start rounded-xl"
             >
               All Categories
             </Button>
@@ -151,7 +161,8 @@ export function ProductFilters({ categories, searchParams }: ProductFiltersProps
                 key={category}
                 variant={selectedCategory === category ? "default" : "ghost"}
                 onClick={() => handleCategoryChange(category)}
-                className="w-full justify-start"
+                disabled={isPending}
+                className="w-full justify-start rounded-xl"
               >
                 {category}
               </Button>
@@ -171,21 +182,25 @@ export function ProductFilters({ categories, searchParams }: ProductFiltersProps
                 placeholder="Min"
                 value={minPrice}
                 onChange={(e) => setMinPrice(e.target.value)}
-                className="flex-1"
+                className="flex-1 rounded-xl"
+                disabled={isPending}
               />
               <Input
                 type="number"
                 placeholder="Max"
                 value={maxPrice}
                 onChange={(e) => setMaxPrice(e.target.value)}
-                className="flex-1"
+                className="flex-1 rounded-xl"
+                disabled={isPending}
               />
             </div>
             <Button
               variant="outline"
               onClick={handlePriceFilter}
-              className="w-full"
+              disabled={isPending}
+              className="w-full rounded-xl"
             >
+              {isPending ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
               Apply Price Filter
             </Button>
           </div>
@@ -199,7 +214,7 @@ export function ProductFilters({ categories, searchParams }: ProductFiltersProps
               <label className="text-sm font-medium mb-2 block">Active Filters</label>
               <div className="flex flex-wrap gap-2">
                 {query && (
-                  <Badge variant="secondary" className="gap-1">
+                  <Badge variant="secondary" className="gap-1 rounded-xl">
                     Search: {query}
                     <X 
                       className="h-3 w-3 cursor-pointer" 
@@ -211,7 +226,7 @@ export function ProductFilters({ categories, searchParams }: ProductFiltersProps
                   </Badge>
                 )}
                 {selectedCategory !== "all" && (
-                  <Badge variant="secondary" className="gap-1">
+                  <Badge variant="secondary" className="gap-1 rounded-xl">
                     {selectedCategory}
                     <X 
                       className="h-3 w-3 cursor-pointer" 
@@ -220,7 +235,7 @@ export function ProductFilters({ categories, searchParams }: ProductFiltersProps
                   </Badge>
                 )}
                 {bestSellers && (
-                  <Badge variant="secondary" className="gap-1">
+                  <Badge variant="secondary" className="gap-1 rounded-xl">
                     Best Sellers
                     <X 
                       className="h-3 w-3 cursor-pointer" 
@@ -229,7 +244,7 @@ export function ProductFilters({ categories, searchParams }: ProductFiltersProps
                   </Badge>
                 )}
                 {(minPrice || maxPrice) && (
-                  <Badge variant="secondary" className="gap-1">
+                  <Badge variant="secondary" className="gap-1 rounded-xl">
                     ${minPrice || "0"} - ${maxPrice || "∞"}
                     <X 
                       className="h-3 w-3 cursor-pointer" 

@@ -1,7 +1,8 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useTransition } from "react";
+import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface ProductPaginationProps {
@@ -12,11 +13,14 @@ interface ProductPaginationProps {
 export function ProductPagination({ currentPage, totalPages }: ProductPaginationProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [isPending, startTransition] = useTransition();
 
   const navigateToPage = (page: number) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("page", page.toString());
-    router.push(`/products?${params.toString()}`);
+    startTransition(() => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("page", page.toString());
+      router.push(`/products?${params.toString()}`);
+    });
   };
 
   const getVisiblePages = () => {
@@ -51,9 +55,10 @@ export function ProductPagination({ currentPage, totalPages }: ProductPagination
         variant="outline"
         size="sm"
         onClick={() => navigateToPage(currentPage - 1)}
-        disabled={currentPage <= 1}
+        disabled={currentPage <= 1 || isPending}
+        className="rounded-xl"
       >
-        <ChevronLeft className="h-4 w-4" />
+        {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <ChevronLeft className="h-4 w-4" />}
         Previous
       </Button>
 
@@ -66,6 +71,8 @@ export function ProductPagination({ currentPage, totalPages }: ProductPagination
               variant={currentPage === page ? "default" : "outline"}
               size="sm"
               onClick={() => navigateToPage(page as number)}
+              disabled={isPending}
+              className="rounded-xl"
             >
               {page}
             </Button>
@@ -77,10 +84,11 @@ export function ProductPagination({ currentPage, totalPages }: ProductPagination
         variant="outline"
         size="sm"
         onClick={() => navigateToPage(currentPage + 1)}
-        disabled={currentPage >= totalPages}
+        disabled={currentPage >= totalPages || isPending}
+        className="rounded-xl"
       >
         Next
-        <ChevronRight className="h-4 w-4" />
+        {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <ChevronRight className="h-4 w-4" />}
       </Button>
     </div>
   );

@@ -1,9 +1,12 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { HeroCarousel } from "./hero-carousel";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function HeroSection() {
   return (
-    <section className="relative overflow-hidden min-h-[90vh] flex items-center">
+    <section className="relative overflow-hidden min-h-screen flex flex-col justify-center">
       {/* Background with enhanced gradients */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-muted/10" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(59,130,246,0.1),transparent_50%)]" />
@@ -47,6 +50,11 @@ export function HeroSection() {
             </Button>
           </div>
 
+          {/* Hero Carousel */}
+          <Suspense fallback={<HeroCarouselSkeleton />}>
+            <HeroCarousel />
+          </Suspense>
+
           {/* Enhanced trust indicators */}
           <div className="pt-20 grid grid-cols-2 md:grid-cols-4 gap-8">
             <div className="glass-card p-6 rounded-2xl shadow-soft hover:shadow-glow transition-all duration-300 group">
@@ -69,5 +77,27 @@ export function HeroSection() {
         </div>
       </div>
     </section>
+  );
+}
+
+function HeroCarouselSkeleton() {
+  return (
+    <div className="mt-16">
+      <div className="text-center mb-8">
+        <Skeleton className="h-8 w-32 mx-auto mb-4 rounded-full" />
+        <Skeleton className="h-8 w-64 mx-auto rounded-xl" />
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div key={i} className="space-y-4">
+            <Skeleton className="h-64 w-full rounded-2xl" />
+            <Skeleton className="h-4 w-3/4" />
+            <Skeleton className="h-4 w-1/2" />
+            <Skeleton className="h-8 w-1/4" />
+            <Skeleton className="h-10 w-full rounded-xl" />
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }

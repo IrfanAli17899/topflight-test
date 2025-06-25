@@ -6,30 +6,25 @@ import { CreditCard, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { type Cart } from "@/lib/cart";
-import { useServerAction } from "zsa-react";
-import { clearCartAction } from "@/apis/cart";
+import { type Cart } from "@/lib/cart-store";
+import { useCartStore } from "@/lib/cart-store";
 
 interface CartSummaryProps {
-  cart?: Cart;
+  cart: Cart;
 }
 
 export function CartSummary({ cart }: CartSummaryProps) {
   const [isClearing, setIsClearing] = useState(false);
-  const { execute: clearCart } = useServerAction(clearCartAction);
+  const clearCart = useCartStore((state) => state.clearCart);
 
   const handleClearCart = async () => {
     setIsClearing(true);
     
-    const [result, error] = await clearCart({});
-    
-    if (error) {
-      console.error("Failed to clear cart:", error);
-    } else {
-      window.location.reload(); // Simple way to refresh the cart
-    }
-    
-    setIsClearing(false);
+    // Add a small delay for better UX
+    setTimeout(() => {
+      clearCart();
+      setIsClearing(false);
+    }, 300);
   };
 
   if (!cart || cart.items.length === 0) {
@@ -42,7 +37,7 @@ export function CartSummary({ cart }: CartSummaryProps) {
   const total = subtotal + shipping + tax;
 
   return (
-    <Card className="border-0 shadow-lg bg-card/50 backdrop-blur-sm sticky top-24">
+    <Card className="border-0 shadow-glow glass-card sticky top-24">
       <CardHeader>
         <CardTitle>Order Summary</CardTitle>
       </CardHeader>
@@ -79,13 +74,13 @@ export function CartSummary({ cart }: CartSummaryProps) {
         </div>
 
         {shipping > 0 && (
-          <div className="text-sm text-muted-foreground bg-muted/50 p-3 rounded-lg">
+          <div className="text-sm text-muted-foreground glass-card p-3 rounded-xl">
             💡 Add ${(50 - subtotal).toFixed(2)} more for free shipping!
           </div>
         )}
 
         <div className="space-y-3">
-          <Button asChild size="lg" className="w-full">
+          <Button asChild size="lg" className="w-full rounded-xl shadow-glow">
             <Link href="/checkout">
               <CreditCard className="h-4 w-4 mr-2" />
               Proceed to Checkout
@@ -96,7 +91,7 @@ export function CartSummary({ cart }: CartSummaryProps) {
             variant="outline"
             onClick={handleClearCart}
             disabled={isClearing}
-            className="w-full"
+            className="w-full rounded-xl glass-card"
           >
             <Trash2 className="h-4 w-4 mr-2" />
             {isClearing ? "Clearing..." : "Clear Cart"}
