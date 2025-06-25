@@ -21,7 +21,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
     category: searchParams.category,
     minPrice: searchParams.minPrice ? parseFloat(searchParams.minPrice) : undefined,
     maxPrice: searchParams.maxPrice ? parseFloat(searchParams.maxPrice) : undefined,
-    sortBy: searchParams.sortBy as any,
+    sortBy: searchParams.sortBy as unknown as "name" | "price-asc" | "price-desc" | "best-sellers" | undefined,
     bestSellers: searchParams.bestSellers === 'true',
     page: searchParams.page ? parseInt(searchParams.page) : 1,
     limit: 12,
@@ -68,7 +68,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
                 <p className="text-sm text-muted-foreground">
                   Showing {products.length} of {total} products
                   {searchParams.query && (
-                    <span> for "{searchParams.query}"</span>
+                    <span> for &quot;{searchParams.query}&quot;</span>
                   )}
                 </p>
               </div>

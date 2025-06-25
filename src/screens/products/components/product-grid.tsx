@@ -16,7 +16,7 @@ export function ProductGrid({ products, currentPage, totalPages }: ProductGridPr
           <div className="text-6xl mb-4">🔍</div>
           <h3 className="text-xl font-semibold mb-2">No products found</h3>
           <p className="text-muted-foreground">
-            Try adjusting your filters or search terms to find what you're looking for.
+            Try adjusting your filters or search terms to find what you&apos;re looking for.
           </p>
         </div>
       </div>

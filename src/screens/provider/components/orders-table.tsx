@@ -29,7 +29,7 @@ export function OrdersTable({ orders, currentPage, totalPages }: OrdersTableProp
             <div className="text-6xl mb-4">📋</div>
             <h3 className="text-xl font-semibold mb-2">No orders found</h3>
             <p className="text-muted-foreground">
-              Try adjusting your filters to find what you're looking for.
+              Try adjusting your filters to find what you&apos;re looking for.
             </p>
           </CardContent>
         </Card>

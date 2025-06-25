@@ -15,7 +15,7 @@ interface ProviderPageProps {
 export default async function ProviderPage({ searchParams }: ProviderPageProps) {
   const [result, error] = await searchOrdersAction({
     query: searchParams.query,
-    status: searchParams.status as any,
+    status: searchParams.status as unknown as "pending" | "shipped" | "delivered" | "cancelled" | undefined,
     startDate: searchParams.startDate,
     endDate: searchParams.endDate,
     page: searchParams.page ? parseInt(searchParams.page) : 1,
@@ -57,7 +57,7 @@ export default async function ProviderPage({ searchParams }: ProviderPageProps) 
           <p className="text-sm text-muted-foreground">
             Showing {orders.length} of {total} orders
             {searchParams.query && (
-              <span> for "{searchParams.query}"</span>
+              <span> for &quot;{searchParams.query}&quot;</span>
             )}
           </p>
         </div>
