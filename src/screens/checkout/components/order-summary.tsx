@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { type Cart } from "@/lib/cart";
+import { type Cart } from "@/lib/cart-store";
 
 interface OrderSummaryProps {
   cart: Cart;
@@ -14,7 +14,7 @@ export function OrderSummary({ cart }: OrderSummaryProps) {
   const total = subtotal + shipping + tax;
 
   return (
-    <Card className="border-0 shadow-lg bg-card/50 backdrop-blur-sm sticky top-24">
+    <Card className="border-0 shadow-glow glass-card sticky top-24">
       <CardHeader>
         <CardTitle>Order Summary</CardTitle>
       </CardHeader>
@@ -24,7 +24,7 @@ export function OrderSummary({ cart }: OrderSummaryProps) {
         <div className="space-y-4">
           {cart.items.map((item) => (
             <div key={item.productId} className="flex gap-3">
-              <div className="relative w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
+              <div className="relative w-16 h-16 rounded-xl overflow-hidden flex-shrink-0">
                 <Image
                   src={item.image}
                   alt={item.name}
@@ -77,7 +77,7 @@ export function OrderSummary({ cart }: OrderSummaryProps) {
         </div>
 
         {shipping > 0 && (
-          <div className="text-sm text-muted-foreground bg-muted/50 p-3 rounded-lg">
+          <div className="text-sm text-muted-foreground glass-card p-3 rounded-xl">
             💡 Orders over $50 qualify for free shipping!
           </div>
         )}
