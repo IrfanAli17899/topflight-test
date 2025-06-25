@@ -3,14 +3,13 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Star, ShoppingCart, ArrowLeft, Package, Shield, Truck } from "lucide-react";
+import { Star, ShoppingCart, ArrowLeft, Package, Shield, Truck, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { type Product } from "@/data/products";
-import { useServerAction } from "zsa-react";
-import { addToCartAction } from "@/apis/cart";
+import { useCartStore } from "@/lib/cart-store";
 
 interface ProductDetailContentProps {
   product: Product;
@@ -18,23 +17,29 @@ interface ProductDetailContentProps {
 
 export function ProductDetailContent({ product }: ProductDetailContentProps) {
   const [isAdding, setIsAdding] = useState(false);
-  const { execute: addToCart } = useServerAction(addToCartAction);
+  const { cart, addToCart } = useCartStore();
 
-  const handleAddToCart = async () => {
+
+  const isInCart = cart.items.some(item => item.productId === product.id);
+
+  const handleAddToCart = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (isInCart) return; // Don't add if already in cart
+    
     setIsAdding(true);
     
-    const [, error] = await addToCart({
-      productId: product.id,
-      name: product.name,
-      price: product.price,
-      image: product.image,
-    });
-
-    if (error) {
-      console.error("Failed to add to cart:", error);
-    }
-    
-    setIsAdding(false);
+    // Add a small delay for better UX
+    setTimeout(() => {
+      addToCart({
+        productId: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+      });
+      setIsAdding(false);
+    }, 300);
   };
 
   return (
@@ -134,14 +139,26 @@ export function ProductDetailContent({ product }: ProductDetailContentProps) {
           </div>
 
           {/* Add to Cart */}
-          <Button
+          <Button 
+            className={`w-full py-6 transition-all duration-300 shadow-soft hover:shadow-glow rounded-xl ${
+              isInCart 
+                ? "bg-green-600 hover:bg-green-700 text-white" 
+                : "bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90"
+            }`}
             onClick={handleAddToCart}
-            disabled={isAdding || product.stock === 0}
-            size="lg"
-            className="w-full text-lg py-6"
+            disabled={isAdding || product.stock === 0 || isInCart}
           >
-            <ShoppingCart className="h-5 w-5 mr-2" />
-            {isAdding ? "Adding to Cart..." : product.stock === 0 ? "Out of Stock" : "Add to Cart"}
+            {isInCart ? (
+              <>
+                <Check className="h-4 w-4 mr-2" />
+                Added to Cart
+              </>
+            ) : (
+              <>
+                <ShoppingCart className="h-4 w-4 mr-2" />
+                {isAdding ? "Adding..." : product.stock === 0 ? "Out of Stock" : "Add to Cart"}
+              </>
+            )}
           </Button>
 
           {/* Features */}

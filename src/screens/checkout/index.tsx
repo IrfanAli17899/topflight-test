@@ -82,25 +82,6 @@ export default function CheckoutPage() {
     }
   };
 
-  if (!cart || cart.items.length === 0) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-muted/10 to-background">
-        <div className="container mx-auto px-4 py-8">
-          <Card className="text-center py-16 border-0 shadow-glow glass-card">
-            <CardContent>
-              <h2 className="text-2xl font-semibold mb-4">Your cart is empty</h2>
-              <p className="text-muted-foreground mb-6">
-                Add some products to your cart before checking out.
-              </p>
-              <Button asChild className="rounded-xl">
-                <Link href="/products">Continue Shopping</Link>
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    );
-  }
 
   if (orderComplete) {
     return (
@@ -169,6 +150,26 @@ export default function CheckoutPage() {
                   <Link href="/provider">View in Provider Portal</Link>
                 </Button>
               </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  if (!cart || cart.items.length === 0) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-muted/10 to-background">
+        <div className="container mx-auto px-4 py-8">
+          <Card className="text-center py-16 border-0 shadow-glow glass-card">
+            <CardContent>
+              <h2 className="text-2xl font-semibold mb-4">Your cart is empty</h2>
+              <p className="text-muted-foreground mb-6">
+                Add some products to your cart before checking out.
+              </p>
+              <Button asChild className="rounded-xl">
+                <Link href="/products">Continue Shopping</Link>
+              </Button>
             </CardContent>
           </Card>
         </div>
