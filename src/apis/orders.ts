@@ -127,15 +127,31 @@ const createOrderSchema = z.object({
 export const createOrderAction = createServerAction()
   .input(createOrderSchema)
   .handler(async ({ input }) => {
+    console.log("Creating order with input:", input);
+    
+    // Generate new order ID
+    const newOrderId = `ORD-${(orders.length + 1).toString().padStart(3, '0')}`;
+    
     const newOrder: Order = {
-      id: `ORD-${(orders.length + 1).toString().padStart(3, '0')}`,
-      ...input,
+      id: newOrderId,
+      customerName: input.customerName,
+      customerEmail: input.customerEmail,
+      customerPhone: input.customerPhone,
+      shippingAddress: input.shippingAddress,
+      items: input.items,
+      total: input.total,
       status: 'pending',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
 
-    orders.unshift(newOrder); // Add to beginning of array
+    console.log("New order created:", newOrder);
+
+    // Add to beginning of orders array so it appears first
+    orders.unshift(newOrder);
+    
+    console.log("Orders array now has", orders.length, "orders");
+    console.log("First order:", orders[0]);
 
     return newOrder;
   });
