@@ -4,26 +4,13 @@ import Link from "next/link";
 import { ShoppingCart, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { useState, useEffect } from "react";
-import { useServerAction } from "zsa-react";
-import { getCartAction } from "@/apis/cart";
+import { useState } from "react";
+import { useCartStore } from "@/lib/cart-store";
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { data: cart, execute: getCart } = useServerAction(getCartAction);
-
-  useEffect(() => {
-    getCart({});
-    
-    // Set up interval to refresh cart data
-    const interval = setInterval(() => {
-      getCart({});
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [getCart]);
-
-  const cartItemsCount = cart?.items.length || 0;
+  const cart = useCartStore((state) => state.cart);
+  const cartItemsCount = cart.items.length;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/50 glass-card-strong shadow-soft">
@@ -60,7 +47,7 @@ export function Header() {
               <Button variant="ghost" size="icon" className="relative hover:bg-accent/50 transition-all duration-300 rounded-xl">
                 <ShoppingCart className="h-5 w-5" />
                 {cartItemsCount > 0 && (
-                  <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-gradient-to-r from-primary to-blue-600 text-xs text-primary-foreground flex items-center justify-center font-bold animate-pulse shadow-glow">
+                  <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-gradient-to-r from-primary to-blue-600 text-xs text-primary-foreground flex items-center justify-center font-bold shadow-glow">
                     {cartItemsCount}
                   </span>
                 )}

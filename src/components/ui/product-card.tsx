@@ -7,9 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { type Product } from "@/data/products";
-import { useServerAction } from "zsa-react";
-import { addToCartAction, getCartAction } from "@/apis/cart";
-import { useState, useEffect } from "react";
+import { useCartStore } from "@/lib/cart-store";
+import { useState } from "react";
 
 interface ProductCardProps {
   product: Product;
@@ -17,19 +16,9 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const [isAdding, setIsAdding] = useState(false);
-  const [isInCart, setIsInCart] = useState(false);
-  const { execute: addToCart } = useServerAction(addToCartAction);
-  const { data: cart, execute: getCart } = useServerAction(getCartAction);
-
-  useEffect(() => {
-    getCart({});
-  }, [getCart]);
-
-  useEffect(() => {
-    if (cart) {
-      setIsInCart(cart.items.some(item => item.productId === product.id));
-    }
-  }, [cart, product.id]);
+  const { cart, addToCart } = useCartStore();
+  
+  const isInCart = cart.items.some(item => item.productId === product.id);
 
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -39,22 +28,16 @@ export function ProductCard({ product }: ProductCardProps) {
     
     setIsAdding(true);
     
-    const [result, error] = await addToCart({
-      productId: product.id,
-      name: product.name,
-      price: product.price,
-      image: product.image,
-    });
-
-    if (error) {
-      console.error("Failed to add to cart:", error);
-    } else {
-      setIsInCart(true);
-      // Refresh cart data
-      getCart({});
-    }
-    
-    setIsAdding(false);
+    // Add a small delay for better UX
+    setTimeout(() => {
+      addToCart({
+        productId: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+      });
+      setIsAdding(false);
+    }, 300);
   };
 
   return (

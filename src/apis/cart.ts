@@ -2,7 +2,9 @@
 
 import { createServerAction } from "zsa";
 import { z } from "zod";
-import { addToCart, removeFromCart, clearCart, getCart } from "@/lib/cart";
+
+// These are now just placeholder actions since we're using Zustand for cart management
+// But we keep them for compatibility with existing code
 
 export const addToCartAction = createServerAction()
   .input(
@@ -14,27 +16,27 @@ export const addToCartAction = createServerAction()
     })
   )
   .handler(async ({ input }) => {
-    const cart = addToCart(input);
-    return cart;
+    // Return success - actual logic is handled in Zustand store
+    return { success: true, item: input };
   });
 
 export const removeFromCartAction = createServerAction()
   .input(z.object({ productId: z.string() }))
   .handler(async ({ input }) => {
-    const cart = removeFromCart(input.productId);
-    return cart;
+    // Return success - actual logic is handled in Zustand store
+    return { success: true, productId: input.productId };
   });
 
 export const clearCartAction = createServerAction()
   .input(z.object({}))
   .handler(async () => {
-    const cart = clearCart();
-    return cart;
+    // Return success - actual logic is handled in Zustand store
+    return { success: true };
   });
 
 export const getCartAction = createServerAction()
   .input(z.object({}))
   .handler(async () => {
-    const cart = getCart();
-    return cart;
+    // Return empty cart - actual data comes from Zustand store
+    return { items: [], total: 0 };
   });
